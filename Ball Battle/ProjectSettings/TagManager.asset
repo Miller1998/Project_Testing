@@ -7,6 +7,8 @@ TagManager:
   - EnemyGate
   - PlayerGate
   - SoccerField
+  - AttackerArea
+  - DefenderArea
   layers:
   - Default
   - TransparentFX
@@ -17,8 +19,8 @@ TagManager:
   - 
   - 
   - SoccerField
-  - 
-  - 
+  - AttackerField
+  - DefenderField
   - 
   - 
   - 

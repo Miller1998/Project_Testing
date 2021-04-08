@@ -25,8 +25,8 @@ public class GameManager : MonoBehaviour
     private Power enemyPower;
     private Power playerPower;
     //LayerMask
-    [SerializeField]
-    private LayerMask layerMask;
+    /**[SerializeField]
+    private LayerMask layerMask;**/
 
     #endregion
 
@@ -37,7 +37,8 @@ public class GameManager : MonoBehaviour
 
     [Header("Data and GameObject Caller")]
     public PlayerSpawnerData[] minionDatas;
-    public GameObject parentWorld;
+    public GameObject parentAttacker;
+    public GameObject parentDefender;
     public Camera mainCamera;
     
     #endregion
@@ -58,7 +59,7 @@ public class GameManager : MonoBehaviour
 
         EnergyBar();
         CountDownTimer();
-        UseAmountOfEnergy();
+        PlayerActionTouchEvent();
         //if timer reach 0 battle ends
 
     }
@@ -81,42 +82,52 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void UseAmountOfEnergy()
-    {
-
-        //need screen touch for execute the SpendEnergy(int amount) order (both player and enemy)
-        for (int i = 0; i < minionDatas.Length; i++)
-        {
-
-            if (minionDatas[i].playerMinionName.Contains("Player") /**and player phase == true**/)
-            {
-
-                if (playerPower.eAmount >= minionDatas[i].energyCost && Mouse.current.leftButton.wasPressedThisFrame)
-                {
-
-                    PlayerActionTouchEvent(minionDatas[i].minionModel, parentWorld);
-                    playerPower.SpendEnergy(minionDatas[i].energyCost);
-
-                }
-
-            }
-
-        }
-        
-
-    }
     
-    public void PlayerActionTouchEvent(GameObject minionPrefabs, GameObject parent)
+    public void PlayerActionTouchEvent()
     {
 
         Vector3 mousePos = Mouse.current.position.ReadValue();
         Ray ray = mainCamera.ScreenPointToRay(mousePos);
         RaycastHit rayCastHit;
 
-        if (Physics.Raycast(ray, out rayCastHit, float.MaxValue, layerMask))
+        if (Physics.Raycast(ray, out rayCastHit/**, float.MaxValue, layerMask**/))
         {
-            //Debug.Log("Mouse Position on World = " + rayCastHit.point);
-            SpawnAtLocation(rayCastHit.point, minionPrefabs, parent);
+
+            string colliderName = rayCastHit.collider.name;
+            Debug.Log("Mouse On the" + rayCastHit.collider.name);
+
+            //need screen touch for execute the SpendEnergy(int amount) order (both player and enemy)
+            for (int i = 0; i < minionDatas.Length; i++)
+            {
+
+                if (minionDatas[i].playerMinionName.Contains("Attacker") && colliderName.Contains("Attacker"))
+                {
+
+                    if (playerPower.eAmount >= minionDatas[i].energyCost && Mouse.current.leftButton.wasPressedThisFrame)
+                    {
+
+                        SpawnAtLocation(rayCastHit.point, minionDatas[i].minionModel, parentAttacker);
+                        playerPower.SpendEnergy(minionDatas[i].energyCost);
+
+                    }
+
+                }
+
+                if (minionDatas[i].playerMinionName.Contains("Defender") && colliderName.Contains("Defender"))
+                {
+
+                    if (enemyPower.eAmount >= minionDatas[i].energyCost && Mouse.current.leftButton.wasPressedThisFrame)
+                    {
+
+                        SpawnAtLocation(rayCastHit.point, minionDatas[i].minionModel, parentDefender);
+                        enemyPower.SpendEnergy(minionDatas[i].energyCost);
+
+                    }
+
+                }
+
+            }
+
         }
 
     }
