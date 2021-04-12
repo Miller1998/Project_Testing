@@ -36,8 +36,6 @@ namespace PlayerMinions
 
         [Header("GameObject Caller")]
         public GameObject minionModel;
-        //public AudioClip jetSFX;
-        //public AudioClip destroyedSFX;
 
         #endregion
 

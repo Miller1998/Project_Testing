@@ -24,9 +24,12 @@ public class GameManager : MonoBehaviour
     //Class
     private Power enemyPower;
     private Power playerPower;
-    //LayerMask
-    /**[SerializeField]
-    private LayerMask layerMask;**/
+    //gameobject
+    [SerializeField]
+    private GameObject ballPrefabs;
+    //bool
+    private bool enemyWin = false;
+    private bool playerWin = false;
 
     #endregion
 
@@ -70,7 +73,7 @@ public class GameManager : MonoBehaviour
         timerTextSpace.text = timeLeft.ToString("0") + "s";
     }
 
-    #region EnergyBar_Mechanic_and_Spawning
+    #region EnergyBarMechanic_and_Spawning
     
     void EnergyBar()//this function just for execute the class
     {
@@ -94,19 +97,30 @@ public class GameManager : MonoBehaviour
         {
 
             string colliderName = rayCastHit.collider.name;
-            Debug.Log("Mouse On the" + rayCastHit.collider.name);
+            //Debug.Log("Mouse On the" + rayCastHit.collider.name);
 
             //need screen touch for execute the SpendEnergy(int amount) order (both player and enemy)
             for (int i = 0; i < minionDatas.Length; i++)
             {
 
-                if (minionDatas[i].playerMinionName.Contains("Attacker") && colliderName.Contains("Attacker"))
+                if (minionDatas[i].playerMinionName.Contains("Attacker") && colliderName.Contains("Attacker") /**&& player phase**/)
                 {
 
                     if (playerPower.eAmount >= minionDatas[i].energyCost && Mouse.current.leftButton.wasPressedThisFrame)
                     {
 
-                        SpawnAtLocation(rayCastHit.point, minionDatas[i].minionModel, parentAttacker);
+                        SpawnAtLocation(
+                            rayCastHit.point, 
+                            minionDatas[i].minionModel, 
+                            parentAttacker, 
+                            minionDatas[i].playerMinionName, 
+                            minionDatas[i].spawnTime, 
+                            minionDatas[i].normalSpeed,
+                            minionDatas[i].carryingSpeed,
+                            minionDatas[i].returnSpeed,
+                            minionDatas[i].reactiveTime,
+                            minionDatas[i].ballSpeed,
+                            minionDatas[i].detectionRange);
                         playerPower.SpendEnergy(minionDatas[i].energyCost);
 
                     }
@@ -118,8 +132,19 @@ public class GameManager : MonoBehaviour
 
                     if (enemyPower.eAmount >= minionDatas[i].energyCost && Mouse.current.leftButton.wasPressedThisFrame)
                     {
-
-                        SpawnAtLocation(rayCastHit.point, minionDatas[i].minionModel, parentDefender);
+                        
+                        SpawnAtLocation(
+                            rayCastHit.point, 
+                            minionDatas[i].minionModel, 
+                            parentDefender, 
+                            minionDatas[i].playerMinionName, 
+                            minionDatas[i].spawnTime,
+                            minionDatas[i].normalSpeed,
+                            minionDatas[i].carryingSpeed,
+                            minionDatas[i].returnSpeed,
+                            minionDatas[i].reactiveTime,
+                            minionDatas[i].ballSpeed,
+                            minionDatas[i].detectionRange);
                         enemyPower.SpendEnergy(minionDatas[i].energyCost);
 
                     }
@@ -132,14 +157,34 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void SpawnAtLocation(Vector3 spawnPosition, GameObject minionModel, GameObject parent)
+    public void SpawnAtLocation(Vector3 spawnPosition, GameObject minionModel, GameObject parent, string name, float spTime, float normalSpeed, float carryingSpeed, float returnSpeed, float reactiveTime, float ballSpeed, float detectionRange)
     {
 
         GameObject deployedMinion = Instantiate(minionModel, spawnPosition, Quaternion.identity);
         deployedMinion.transform.parent = parent.transform;
+        deployedMinion.transform.rotation = parent.transform.rotation;
+        deployedMinion.gameObject.GetComponent<MinionBehaviour>().setDefault(name, spTime, normalSpeed, returnSpeed, carryingSpeed, reactiveTime, ballSpeed, detectionRange);
 
     }
 
     #endregion
 
+
+    #region Clearing_Area_Every_Phase_Begin
+
+    void ClearAll()
+    {
+
+        foreach (Transform child in parentAttacker.transform)
+        {
+            Destroy(child);
+        }
+        foreach (Transform child in parentDefender.transform)
+        {
+            Destroy(child);
+        }
+
+    }
+
+    #endregion
 }

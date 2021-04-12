@@ -17,10 +17,10 @@ MonoBehaviour:
   energyCost: 3
   spawnTime: 0.5
   reactiveTime: 2.5
-  normalSpeed: 1.5
-  carryingSpeed: 0
-  ballSpeed: 0
+  normalSpeed: 1
+  carryingSpeed: 0.75
+  ballSpeed: 1.5
   returnSpeed: 2
-  detectionRange: 35
-  minionModel: {fileID: 5556245642965255288, guid: 86a489a64b525744da88020a145f6e77,
+  detectionRange: 3.5
+  minionModel: {fileID: 2155870683438754824, guid: 77085ef2a8e4aa546b2ff4f7e38579c3,
     type: 3}

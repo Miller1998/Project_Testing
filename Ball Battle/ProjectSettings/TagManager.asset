@@ -9,6 +9,11 @@ TagManager:
   - SoccerField
   - AttackerArea
   - DefenderArea
+  - ball
+  - Enemy
+  - GameManager
+  - PlayerWall
+  - EnemyWall
   layers:
   - Default
   - TransparentFX

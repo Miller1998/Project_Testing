@@ -20,7 +20,7 @@ MonoBehaviour:
   normalSpeed: 1.5
   carryingSpeed: 0.75
   ballSpeed: 1.5
-  returnSpeed: 0
-  detectionRange: 0
-  minionModel: {fileID: 2845386610692583367, guid: 7bae195f7666d3347a2362bf167d40f2,
+  returnSpeed: 2
+  detectionRange: 3.5
+  minionModel: {fileID: 3836263436239746750, guid: 7bae195f7666d3347a2362bf167d40f2,
     type: 3}
