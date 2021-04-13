@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 2155870683438754820}
   - component: {fileID: 2155870683438754825}
   - component: {fileID: -7299245299761767316}
-  - component: {fileID: -1504606091637409730}
   - component: {fileID: 540593110280671929}
+  - component: {fileID: 6328844723248108781}
   m_Layer: 0
   m_Name: Enemy(Defender)
   m_TagString: Enemy
@@ -98,6 +98,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minionName: 
   normalSpeed: 0
+  ballDetectPlayerRange: 0
+  childrenAtk: []
+  childrenDef: []
   ball: {fileID: 0}
 --- !u!195 &-7299245299761767316
 NavMeshAgent:
@@ -121,20 +124,6 @@ NavMeshAgent:
   m_BaseOffset: 1
   m_WalkableMask: 1
   m_ObstacleAvoidanceType: 4
---- !u!64 &-1504606091637409730
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2155870683438754824}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 10206, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!54 &540593110280671929
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -151,6 +140,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
+--- !u!65 &6328844723248108781
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2155870683438754824}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &2155870683707129642
 GameObject:
   m_ObjectHideFlags: 0
