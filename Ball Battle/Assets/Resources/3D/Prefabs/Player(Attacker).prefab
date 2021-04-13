@@ -98,6 +98,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minionName: 
   normalSpeed: 0
+  ballDetectPlayerRange: 10
+  childrenAtk: []
+  childrenDef: []
   ball: {fileID: 0}
 --- !u!64 &-43624422931105280
 MeshCollider:

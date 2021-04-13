@@ -16,7 +16,7 @@ MonoBehaviour:
   minionDesc: 
   energyCost: 3
   spawnTime: 0.5
-  reactiveTime: 2.5
+  reactiveTime: 4
   normalSpeed: 1
   carryingSpeed: 0.75
   ballSpeed: 1.5

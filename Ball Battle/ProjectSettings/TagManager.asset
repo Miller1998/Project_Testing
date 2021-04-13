@@ -14,6 +14,7 @@ TagManager:
   - GameManager
   - PlayerWall
   - EnemyWall
+  - WorldGame
   layers:
   - Default
   - TransparentFX

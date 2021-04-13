@@ -11,14 +11,15 @@ GameObject:
   - component: {fileID: 1005609895897829911}
   - component: {fileID: 3093573493188893375}
   - component: {fileID: 7476503687705715229}
-  - component: {fileID: 90111978}
   - component: {fileID: 90111977}
+  - component: {fileID: 1067717936}
+  - component: {fileID: 1067717937}
   m_Layer: 0
   m_Name: Hedra01
   m_TagString: ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 8
   m_IsActive: 1
 --- !u!4 &1005609895897829911
 Transform:
@@ -82,20 +83,6 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &90111978
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7381824422176355157}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 4
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: 4802490720406382968, guid: fe22a7f0714ad2a40937bef49fde7620, type: 3}
 --- !u!54 &90111977
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -110,5 +97,32 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 10
   m_CollisionDetection: 0
+--- !u!114 &1067717936
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7381824422176355157}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b6b7e351cdd78c9449dc6cdc89497e4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  gM: {fileID: 0}
+--- !u!136 &1067717937
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7381824422176355157}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  m_Radius: 30.221199
+  m_Height: 60.4424
+  m_Direction: 1
+  m_Center: {x: -3.4742002, y: 36.267403, z: -3.7149}

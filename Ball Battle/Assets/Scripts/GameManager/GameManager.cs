@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using TMPro;
 using PlayerMinions;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -30,6 +31,8 @@ public class GameManager : MonoBehaviour
     //bool
     private bool enemyWin = false;
     private bool playerWin = false;
+    [SerializeField]
+    bool pmActive = false;
 
     #endregion
 
@@ -37,6 +40,10 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Caller")]
     public TextMeshProUGUI timerTextSpace;
+    public GameObject enemyWinsUI;
+    public GameObject playerWinsUI;
+    public GameObject drawUI;
+    public GameObject pauseMenuUI;
 
     [Header("Data and GameObject Caller")]
     public PlayerSpawnerData[] minionDatas;
@@ -55,6 +62,8 @@ public class GameManager : MonoBehaviour
 
         minionDatas = Resources.LoadAll("Datas/Minions", typeof(PlayerSpawnerData)).Cast<PlayerSpawnerData>().ToArray();
 
+        Time.timeScale = 1;
+
     }
 
     private void Update()
@@ -65,6 +74,46 @@ public class GameManager : MonoBehaviour
         PlayerActionTouchEvent();
         //if timer reach 0 battle ends
 
+            if (playerWin == true)
+            {
+                Debug.Log("Player Wins");
+                playerWinsUI.SetActive(true);
+                enemyWinsUI.SetActive(false);
+                drawUI.SetActive(false);
+
+                Time.timeScale = 0;
+            }
+            else if (enemyWin == true)
+            {
+                Debug.Log("Enemy Wins");
+                playerWinsUI.SetActive(false);
+                enemyWinsUI.SetActive(true);
+                drawUI.SetActive(false);
+
+                Time.timeScale = 0;
+            }
+            else
+            {
+                
+                if (timeLeft <= 0)
+                {
+                    Debug.Log("Battle End...");
+                    Debug.Log("Match Draw");
+                    playerWinsUI.SetActive(false);
+                    enemyWinsUI.SetActive(false);
+                    drawUI.SetActive(true);
+
+                    Time.timeScale = 0;
+                }
+
+            }
+
+    }
+
+    public void GoalDetection(bool player, bool enemy)
+    {
+        playerWin = player;
+        enemyWin = enemy;
     }
 
     public void CountDownTimer()
@@ -187,4 +236,32 @@ public class GameManager : MonoBehaviour
     }
 
     #endregion
+
+    #region UISystem
+
+    public void ChangeScenes(string scene)
+    {
+        SceneManager.LoadScene(scene);
+    }
+
+    public void PauseSystem()
+    {
+
+        pmActive = !pmActive;
+
+        if (pmActive == true)
+        {
+            Time.timeScale = 0;
+            pauseMenuUI.gameObject.SetActive(true);
+        }
+        else
+        {
+            Time.timeScale = 1;
+            pauseMenuUI.gameObject.SetActive(false);
+        }
+
+    }
+
+    #endregion
+
 }

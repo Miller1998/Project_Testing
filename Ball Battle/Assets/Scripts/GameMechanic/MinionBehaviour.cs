@@ -18,7 +18,9 @@ public class MinionBehaviour : MonoBehaviour
     private float reactiveTime;
     private float ballSpeed;
     private float detectionRange;
-    private int point = 0;   
+    [SerializeField]
+    private float ballDetectPlayerRange = 10f;
+    private int point = 0;
     //GameObject Caller
     private GameManager gM;
     private GameObject parentAtk;
@@ -27,6 +29,7 @@ public class MinionBehaviour : MonoBehaviour
     private Transform[] childrenAtk;
     [SerializeField]
     private Transform[] childrenDef;
+    private GameObject worldParent;
 
     //Physics
     private Vector3 originalPos;
@@ -64,8 +67,9 @@ public class MinionBehaviour : MonoBehaviour
     {
         
         this.gameObject.GetComponent<MeshRenderer>().materials[0].color = Color.white;
-        originalPos = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
         ball = GameObject.FindGameObjectWithTag("ball");
+        worldParent = GameObject.FindGameObjectWithTag("WorldGame");
+        originalPos = new Vector3(this.gameObject.transform.position.x, this.gameObject.transform.position.y, this.gameObject.transform.position.z);
         gM = GameObject.FindGameObjectWithTag("GameManager").gameObject.GetComponent<GameManager>();
         thisMinionRB = this.gameObject.GetComponent<Rigidbody>();
         //nav = this.GetComponent<NavMeshAgent>();
@@ -79,7 +83,6 @@ public class MinionBehaviour : MonoBehaviour
     {
 
         
-
     }
 
     void Update()
@@ -99,11 +102,6 @@ public class MinionBehaviour : MonoBehaviour
 
         MinionsDeployment();
 
-    }
-
-    void FixedUpdate()
-    {
-        
     }
 
     #region Player/Minion_ACTION
@@ -161,6 +159,9 @@ public class MinionBehaviour : MonoBehaviour
             {
                 hasCaptured = true;
                 hasBall = false;
+
+                this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+                this.gameObject.GetComponent<Rigidbody>().useGravity = false;
             }
 
             if (col.collider.tag == "ball")
@@ -176,8 +177,13 @@ public class MinionBehaviour : MonoBehaviour
         {
             if (col.collider.tag == "Player")
             {
+
                 //If caught by the target, become Inactivated for a period of time (4) (At Collider)
                 hasCaptured = true;
+                
+                this.gameObject.GetComponent<MeshCollider>().isTrigger = true;
+                this.gameObject.GetComponent<Rigidbody>().useGravity = false;
+
             }
         }
 
@@ -214,7 +220,7 @@ public class MinionBehaviour : MonoBehaviour
 
                 point = i;
                 childrenAtk[point].GetComponent<NavMeshAgent>().speed = carryingSpeed;
-
+                
                 childrenAtk[point].GetComponent<MeshRenderer>().material.SetColor("_EMISSION", new Color(129f, 255f, 0f));
                 childrenAtk[point].GetComponent<MeshRenderer>().material.EnableKeyword("_EMISSION");
                 //go to enemy gate
@@ -246,14 +252,17 @@ public class MinionBehaviour : MonoBehaviour
                           
                 //Greyscale until reactivated
                 childrenAtk[point].GetComponent<MeshRenderer>().materials[0].color = Color.grey;
-                childrenAtk[i].GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+                childrenAtk[point].GetComponent<MeshRenderer>().material.DisableKeyword("_EMISSION");
+                
+
 
                 //If caught, pass the Ball to nearest active Attacker at a speed (7) and become Inactivated for a period of time (4)
-                ball.transform.parent = null;
+                ball.transform.parent = worldParent.transform;
+                StartCoroutine("", point);
 
                 //Moving back to its origin position at faster speed (8)
                 childrenAtk[point].GetComponent<NavMeshAgent>().speed = returnSpeed;
-                childrenAtk[point].GetComponent<NavMeshAgent>().SetDestination(originalPos);
+                childrenAtk[point].GetComponent<NavMeshAgent>().SetDestination(childrenAtk[point].gameObject.GetComponent<MinionBehaviour>().originalPos);
 
             }
 
@@ -288,12 +297,14 @@ public class MinionBehaviour : MonoBehaviour
                     int capsByThis = j;
                     //Greyscale until reactivated
                     childrenDef[capsByThis].gameObject.GetComponent<MeshRenderer>().materials[0].color = Color.gray;
+                    StartCoroutine("TimerReactivationDef", capsByThis);
 
                     //Moving back to its origin position at faster speed (8)
                     childrenDef[capsByThis].GetComponent<NavMeshAgent>().speed = returnSpeed;
-                    childrenDef[capsByThis].GetComponent<NavMeshAgent>().SetDestination(originalPos);
+                    childrenDef[capsByThis].GetComponent<NavMeshAgent>().SetDestination(childrenDef[capsByThis].gameObject.GetComponent<MinionBehaviour>().originalPos);
                 }
-                else
+                else if (childrenAtk[i].gameObject.GetComponent<MinionBehaviour>().hasBall == false && 
+                    childrenDef[j].gameObject.GetComponent<MinionBehaviour>().hasCaptured == false)
                 {
                     // Standby after activated
                     //show the area detection
@@ -305,7 +316,39 @@ public class MinionBehaviour : MonoBehaviour
 
     }
 
+    IEnumerable TimerReactivationATK(int point)
+    {
+
+        childrenAtk[point].GetComponent<MeshRenderer>().materials[0].color = Color.blue;
+        childrenAtk[point].gameObject.GetComponent<MeshCollider>().isTrigger = false;
+        childrenAtk[point].gameObject.GetComponent<Rigidbody>().useGravity = true;
+        yield return new WaitForSeconds(childrenAtk[point].gameObject.GetComponent<MinionBehaviour>().reactiveTime);
     
+    }
+    IEnumerable TimerReactivationDef(int capsByThis)
+    {
+        childrenDef[capsByThis].GetComponent<MeshRenderer>().materials[0].color = Color.blue;
+        childrenDef[capsByThis].gameObject.GetComponent<MeshCollider>().isTrigger = false;
+        childrenDef[capsByThis].gameObject.GetComponent<Rigidbody>().useGravity = true;
+        yield return new WaitForSeconds(childrenDef[capsByThis].gameObject.GetComponent<MinionBehaviour>().reactiveTime);
+
+    }
+
+    public void BallDetectNearbyPlayer(int index)
+    {
+
+        if (Vector3.Distance(this.transform.position, childrenAtk[index].transform.position) <= ballDetectPlayerRange
+            && childrenAtk[index].GetComponent<MinionBehaviour>().hasCaptured == false)
+        {
+            ball.transform.position = Vector3.MoveTowards(this.transform.position, childrenAtk[index].transform.position, ballSpeed * Time.deltaTime);
+            ball.gameObject.transform.parent = null;
+        }
+        if (childrenAtk[index].GetComponent<MinionBehaviour>().hasBall == true)
+        {
+            ball.gameObject.transform.parent = childrenAtk[index].transform;
+        }
+
+    }
 
     #endregion
 
