@@ -207,12 +207,19 @@ public class MinionBehaviour : MonoBehaviour
 
     }
 
-    void OnTriggerEnter(Collider other)
+    /*void OnTriggerEnter(Collider other)
     {
 
+        if (this.tag == "Player")
+        {
+            if (other.tag == "ball")
+            {
+                other.transform.parent = this.transform;
+                hasBall = true;
+            }
+        }
 
-
-    }
+    }*/
 
     #endregion
 

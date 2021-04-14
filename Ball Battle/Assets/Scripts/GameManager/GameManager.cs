@@ -28,11 +28,13 @@ public class GameManager : MonoBehaviour
     //gameobject
     [SerializeField]
     private GameObject ballPrefabs;
+    private Canvas canvasObject;
     //bool
     private bool enemyWin = false;
     private bool playerWin = false;
     [SerializeField]
     bool pmActive = false;
+    //bool setARActive = false;
 
     #endregion
 
@@ -49,7 +51,8 @@ public class GameManager : MonoBehaviour
     public PlayerSpawnerData[] minionDatas;
     public GameObject parentAttacker;
     public GameObject parentDefender;
-    public Camera mainCamera;
+    public GameObject mainCamera;
+    //public GameObject mainARCamera;
     
     #endregion
 
@@ -139,7 +142,7 @@ public class GameManager : MonoBehaviour
     {
 
         Vector3 mousePos = Mouse.current.position.ReadValue();
-        Ray ray = mainCamera.ScreenPointToRay(mousePos);
+        Ray ray = mainCamera.GetComponent<Camera>().ScreenPointToRay(mousePos);
         RaycastHit rayCastHit;
 
         if (Physics.Raycast(ray, out rayCastHit/**, float.MaxValue, layerMask**/))
@@ -261,6 +264,31 @@ public class GameManager : MonoBehaviour
         }
 
     }
+
+    /**public void ChangeMainCamera(bool activation)
+    {
+        //we can use this 
+        setARActive = activation;
+
+        //mainARCamera.gameObject.SetActive(setARActive);
+        //mainCamera.gameObject.SetActive(!setARActive);
+
+        //or this too, can do
+
+        if (setARActive == true)
+        {
+            mainARCamera.gameObject.SetActive(true);
+            mainCamera.gameObject.SetActive(false);
+            //canvasObject.worldCamera = mainARCamera;
+        }
+        else
+        {
+            mainARCamera.gameObject.SetActive(false);
+            mainCamera.gameObject.SetActive(true);
+            //canvasObject.worldCamera = mainCamera;
+        }
+
+    }**/
 
     #endregion
 
