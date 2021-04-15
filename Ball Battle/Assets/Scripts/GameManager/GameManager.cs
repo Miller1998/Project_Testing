@@ -34,7 +34,7 @@ public class GameManager : MonoBehaviour
     private bool playerWin = false;
     [SerializeField]
     bool pmActive = false;
-    //bool setARActive = false;
+    bool setARActive = false;
 
     #endregion
 
@@ -52,7 +52,8 @@ public class GameManager : MonoBehaviour
     public GameObject parentAttacker;
     public GameObject parentDefender;
     public GameObject mainCamera;
-    //public GameObject mainARCamera;
+    public GameObject mainARCamera;
+    public EnableAndDisable ARCameraSwitch;
     
     #endregion
 
@@ -265,7 +266,7 @@ public class GameManager : MonoBehaviour
 
     }
 
-    /**public void ChangeMainCamera(bool activation)
+    public void ChangeMainCamera(bool activation)
     {
         //we can use this 
         setARActive = activation;
@@ -279,16 +280,16 @@ public class GameManager : MonoBehaviour
         {
             mainARCamera.gameObject.SetActive(true);
             mainCamera.gameObject.SetActive(false);
-            //canvasObject.worldCamera = mainARCamera;
+            ARCameraSwitch.EnableAndDisableARCamera(true);
         }
         else
         {
             mainARCamera.gameObject.SetActive(false);
             mainCamera.gameObject.SetActive(true);
-            //canvasObject.worldCamera = mainCamera;
+            ARCameraSwitch.EnableAndDisableARCamera(false);
         }
 
-    }**/
+    }
 
     #endregion
 
